@@ -4,7 +4,7 @@ import { generateQuizQuestions } from '../services/geminiService';
 import { record1PScore, getStats } from '../services/scoreService';
 import { QuizQuestion } from '../types';
 
-const TOPICS = ["Animales", "Geografía", "Cine", "Historia", "Tecnología", "Deportes"];
+const TOPICS = ["Animales", "Geografía", "Cine", "Historia", "Misterios", "Deportes"];
 
 const QuizAI: React.FC = () => {
   const [loading, setLoading] = useState(false);
