@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Sector } from '../types';
 
@@ -8,68 +9,79 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ onSelectSector, isDark }: HomeProps) => {
   return (
-    <div className={`flex flex-col space-y-10 pt-12 relative h-full px-6 transition-colors duration-300
-      ${isDark ? 'bg-slate-950' : 'bg-slate-50'}
-    `}>
-      <div className="text-center space-y-3">
-        <h2 className={`text-5xl font-black tracking-tight leading-none transition-colors
+    <div className={`flex flex-col space-y-12 pt-16 relative h-full px-8 transition-all duration-500 bg-transparent`}>
+      <div className="text-center space-y-4">
+        <h2 className={`text-6xl font-black tracking-tighter leading-[0.85] transition-colors italic uppercase
           ${isDark ? 'text-white' : 'text-slate-900'}
         `}>
           MUNDO<br/>
-          <span className="text-indigo-600">MINIJUEGOS</span>
+          <span className="text-indigo-500 not-italic">Infinito</span>
         </h2>
-        <p className={`font-medium transition-colors ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-          Elige tu modo de desafío
-        </p>
+        <div className="flex justify-center">
+          <p className={`text-[10px] font-bold uppercase tracking-[0.5em] px-4 py-1 rounded-full border
+            ${isDark ? 'text-slate-500 border-white/5 bg-white/5' : 'text-slate-400 border-slate-200 bg-white shadow-sm'}
+          `}>
+            Define tu modo de gloria
+          </p>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         {/* Sector 1 JUGADOR */}
         <button
           onClick={() => onSelectSector('1P')}
-          className={`group relative overflow-hidden rounded-[2.5rem] border-b-8 p-10 flex items-center justify-between transition-all hover:-translate-y-1 active:translate-y-1 shadow-xl
+          className={`group relative overflow-hidden rounded-[3rem] border p-12 flex items-center justify-between transition-all duration-300 hover:-translate-y-2 active:scale-95
             ${isDark 
-              ? 'bg-slate-900 border-indigo-900/50 text-white' 
-              : 'bg-white border-indigo-100 text-slate-800'}
+              ? 'bg-indigo-600/10 border-indigo-500/20 shadow-[0_20px_40px_-15px_rgba(99,102,241,0.2)]' 
+              : 'bg-white border-slate-100 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)]'}
           `}
         >
-          <div className="flex flex-col items-start text-left">
-            <h3 className="text-3xl font-black uppercase italic">Solitario</h3>
-            <p className={`text-sm font-bold mt-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Sectores de IA</p>
+          <div className="flex flex-col items-start text-left z-10">
+            <h3 className={`text-4xl font-black italic uppercase tracking-tighter ${isDark ? 'text-white' : 'text-slate-800'}`}>Solo</h3>
+            <p className={`text-[10px] font-black uppercase tracking-widest mt-2 ${isDark ? 'text-indigo-400' : 'text-indigo-500'}`}>Versus IA</p>
           </div>
-          <span className="text-6xl group-hover:scale-110 transition-transform">👤</span>
-          <div className={`absolute top-0 right-0 w-24 h-24 rounded-full -mr-12 -mt-12 opacity-30
-            ${isDark ? 'bg-indigo-500/10' : 'bg-indigo-50'}
+          
+          <div className="relative w-20 h-20 group-hover:scale-125 transition-transform duration-500 z-10">
+            <svg viewBox="0 0 24 24" fill="none" className={`w-full h-full ${isDark ? 'text-indigo-400' : 'text-indigo-500'}`}>
+              <circle cx="12" cy="12" r="10" className="fill-current opacity-10" />
+              <path d="M12 11C13.6569 11 15 9.65685 15 8C15 6.34315 13.6569 5 12 5C10.3431 5 9 6.34315 9 8C9 9.65685 10.3431 11 12 11Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M18 19C18 16.2386 15.3137 14 12 14C8.68629 14 6 16.2386 6 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </div>
+
+          <div className={`absolute top-0 right-0 w-48 h-48 rounded-full -mr-16 -mt-16 blur-3xl opacity-20 transition-all group-hover:opacity-40
+            ${isDark ? 'bg-indigo-400' : 'bg-indigo-100'}
           `} />
         </button>
 
         {/* Sector 2 JUGADORES */}
         <button
           onClick={() => onSelectSector('2P')}
-          className={`group relative overflow-hidden rounded-[2.5rem] border-b-8 p-10 flex items-center justify-between transition-all hover:-translate-y-1 active:translate-y-1 shadow-xl
+          className={`group relative overflow-hidden rounded-[3rem] border p-12 flex items-center justify-between transition-all duration-300 hover:-translate-y-2 active:scale-95
             ${isDark 
-              ? 'bg-slate-900 border-rose-900/50 text-white' 
-              : 'bg-white border-rose-100 text-slate-800'}
+              ? 'bg-rose-600/10 border-rose-500/20 shadow-[0_20px_40px_-15px_rgba(244,63,94,0.2)]' 
+              : 'bg-white border-slate-100 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)]'}
           `}
         >
-          <div className="flex flex-col items-start text-left">
-            <h3 className="text-3xl font-black uppercase italic">Duelo</h3>
-            <p className={`text-sm font-bold mt-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>1 vs 1 Local</p>
+          <div className="flex flex-col items-start text-left z-10">
+            <h3 className={`text-4xl font-black italic uppercase tracking-tighter ${isDark ? 'text-white' : 'text-slate-800'}`}>Duel</h3>
+            <p className={`text-[10px] font-black uppercase tracking-widest mt-2 ${isDark ? 'text-rose-400' : 'text-rose-500'}`}>1 vs 1</p>
           </div>
-          <span className="text-6xl group-hover:scale-110 transition-transform">👥</span>
-          <div className={`absolute top-0 right-0 w-24 h-24 rounded-full -mr-12 -mt-12 opacity-30
-            ${isDark ? 'bg-rose-500/10' : 'bg-rose-50'}
+
+          <div className="relative w-20 h-20 group-hover:scale-125 transition-transform duration-500 z-10">
+            <svg viewBox="0 0 24 24" fill="none" className={`w-full h-full ${isDark ? 'text-rose-400' : 'text-rose-500'}`}>
+              <circle cx="12" cy="12" r="10" className="fill-current opacity-10" />
+              <path d="M8.5 10C9.60457 10 10.5 9.10457 10.5 8C10.5 6.89543 9.60457 6 8.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M13 17C13 14.7909 10.9853 13 8.5 13C6.01472 13 4 14.7909 4 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M15.5 10C16.6046 10 17.5 9.10457 17.5 8C17.5 6.89543 16.6046 6 15.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M20 17C20 14.7909 17.9853 13 15.5 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </div>
+
+          <div className={`absolute top-0 right-0 w-48 h-48 rounded-full -mr-16 -mt-16 blur-3xl opacity-20 transition-all group-hover:opacity-40
+            ${isDark ? 'bg-rose-400' : 'bg-rose-100'}
           `} />
         </button>
-      </div>
-
-      <div className="mt-auto pb-10 text-center">
-        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border
-          ${isDark ? 'bg-indigo-500/5 border-indigo-500/20' : 'bg-indigo-50 border-indigo-100'}
-        `}>
-           <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-           <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">Powered by Gemini AI</span>
-        </div>
       </div>
     </div>
   );
