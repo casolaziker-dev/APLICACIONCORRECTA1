@@ -33,11 +33,11 @@ const App: React.FC = () => {
   const [sector, setSector] = useState<Sector>('HOME');
   const [activeGame, setActiveGame] = useState<Game | null>(null);
   const [isMuted, setIsMuted] = useState(true);
-  const [isDark, setIsDark] = useState(false);
 
+  // Forzar modo oscuro permanentemente
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDark);
-  }, [isDark]);
+    document.documentElement.classList.add('dark');
+  }, []);
 
   const handleBack = () => {
     audioService.playClick();
@@ -48,7 +48,6 @@ const App: React.FC = () => {
   const toggleMute = () => {
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
-    // Llamar directamente aquí para que el navegador autorice el audio por gesto del usuario
     audioService.setMuted(nextMuted).catch(err => console.error("Error al activar audio:", err));
   };
 
@@ -63,40 +62,32 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`flex flex-col h-[100dvh] w-full max-w-md mx-auto relative overflow-hidden transition-all duration-700 font-['Fredoka'] shadow-2xl bg-[var(--bg-primary)]`}>
+    <div className={`flex flex-col h-[100dvh] w-full max-w-md mx-auto relative overflow-hidden font-['Fredoka'] shadow-2xl bg-slate-950 text-white`}>
       
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-        <div className={`absolute top-[-15%] left-[-15%] w-[60%] h-[60%] rounded-full blur-[120px] transition-colors duration-1000 ${isDark ? 'bg-indigo-900/40' : 'bg-indigo-100'}`} />
-        <div className={`absolute bottom-[-15%] right-[-15%] w-[60%] h-[60%] rounded-full blur-[120px] transition-colors duration-1000 ${isDark ? 'bg-rose-900/30' : 'bg-rose-100'}`} />
+      {/* Fondo Ambientale Oscuro */}
+      <div className="absolute inset-0 pointer-events-none opacity-40">
+        <div className="absolute top-[-15%] left-[-15%] w-[60%] h-[60%] rounded-full blur-[120px] bg-indigo-900/40" />
+        <div className="absolute bottom-[-15%] right-[-15%] w-[60%] h-[60%] rounded-full blur-[120px] bg-rose-900/30" />
       </div>
 
       {!(activeGame?.id === 'snake') && (
-        <header className={`flex-none p-5 flex items-center justify-between z-[100] transition-all duration-500 backdrop-blur-xl border-b ${isDark ? 'bg-slate-950/60 border-white/5' : 'bg-white/70 border-slate-200'}`}>
+        <header className="flex-none p-5 flex items-center justify-between z-[100] backdrop-blur-xl border-b bg-slate-950/60 border-white/5">
           <div className="flex gap-2">
-            {sector !== 'HOME' ? (
-              <button onClick={handleBack} className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all border active:scale-90 ${isDark ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-950 shadow-sm'}`}>
+            {sector !== 'HOME' && (
+              <button onClick={handleBack} className="w-11 h-11 flex items-center justify-center rounded-2xl transition-all border active:scale-90 bg-slate-900 border-white/10 text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
               </button>
-            ) : (
-              <button 
-                onClick={() => { audioService.playClick(); setIsDark(!isDark); }} 
-                className={`flex items-center gap-2 px-3 h-11 rounded-2xl border transition-all active:scale-95 group overflow-hidden ${isDark ? 'bg-slate-900 border-white/10 text-yellow-400' : 'bg-white border-slate-200 text-slate-950 shadow-sm'}`}
-              >
-                <span className="text-xl group-hover:rotate-12 transition-transform">{isDark ? '🌙' : '☀️'}</span>
-                <span className={`text-[9px] font-black uppercase tracking-widest hidden sm:block ${isDark ? 'text-indigo-300' : 'text-slate-500'}`}>
-                  {isDark ? 'CRÍPTICO' : 'RADIANTE'}
-                </span>
-              </button>
             )}
+            {/* El icono de la luna ha sido eliminado del Home */}
           </div>
           
           <div className="text-center flex-1 px-2">
-            <h1 className={`text-[10px] font-black tracking-[0.25em] transition-colors uppercase italic leading-tight ${isDark ? 'text-indigo-400' : 'text-slate-950'}`}>
+            <h1 className="text-[10px] font-black tracking-[0.25em] uppercase italic leading-tight text-indigo-400">
               {activeGame ? activeGame.title : (sector === 'HOME' ? 'Mundo Minijuegos' : `${sector === '1P' ? 'Sector Solitario' : 'Arena de Duelo'}`)}
             </h1>
           </div>
 
-          <button onClick={toggleMute} className={`w-11 h-11 flex items-center justify-center rounded-2xl border transition-all active:scale-90 ${isMuted ? (isDark ? 'bg-slate-900 border-white/10 text-slate-600' : 'bg-white border-slate-200 text-slate-300') : 'bg-indigo-600 text-white border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.5)]'}`}>
+          <button onClick={toggleMute} className={`w-11 h-11 flex items-center justify-center rounded-2xl border transition-all active:scale-90 ${isMuted ? 'bg-slate-900 border-white/10 text-slate-600' : 'bg-indigo-600 text-white border-indigo-500 shadow-[0_0_20px_rgba(99,102,241,0.5)]'}`}>
             {isMuted ? '🔇' : '🔊'}
           </button>
         </header>
@@ -107,22 +98,22 @@ const App: React.FC = () => {
           {activeGame ? (
             <GameRunner game={activeGame} />
           ) : sector === 'HOME' ? (
-            <Home onSelectSector={changeSector} isDark={isDark} />
+            <Home onSelectSector={changeSector} isDark={true} />
           ) : (
             <div className="px-5 pt-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="mb-8">
-                <h2 className={`text-4xl font-black italic uppercase tracking-tighter ${isDark ? 'text-white' : 'text-slate-950'}`}>
+                <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white">
                   {sector === '1P' ? 'MODO SOLO' : 'MODO DUEL'}
                 </h2>
-                <div className={`h-1 w-12 rounded-full mt-2 ${isDark ? 'bg-indigo-500' : 'bg-indigo-600'}`} />
-                <p className={`text-[10px] font-black uppercase tracking-[0.2em] mt-3 ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                <div className="h-1 w-12 rounded-full mt-2 bg-indigo-500" />
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] mt-3 text-slate-500">
                   {sector === '1P' ? 'Desafía tu mente contra la IA' : 'Batalla local para dos leyendas'}
                 </p>
               </div>
               <GameList 
                 games={GAMES.filter(g => g.players === (sector === '1P' ? 1 : 2))} 
                 onSelectGame={selectGame} 
-                isDark={isDark}
+                isDark={true}
               />
             </div>
           )}
@@ -130,7 +121,7 @@ const App: React.FC = () => {
       </main>
 
       {!activeGame && (
-        <footer className={`flex-none p-4 text-center border-t transition-all duration-500 backdrop-blur-md ${isDark ? 'bg-slate-950/60 border-white/5 text-slate-600' : 'bg-white/70 border-slate-100 text-slate-400'}`}>
+        <footer className="flex-none p-4 text-center border-t backdrop-blur-md bg-slate-950/60 border-white/5 text-slate-600">
           <p className="text-[9px] font-black tracking-[0.4em] uppercase">Creado por Iker Caso</p>
         </footer>
       )}
