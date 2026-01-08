@@ -102,7 +102,7 @@ const WordleAI: React.FC = () => {
       case 'correct': return 'bg-emerald-500 border-emerald-500 text-white';
       case 'present': return 'bg-amber-500 border-amber-500 text-white';
       case 'absent': return 'bg-slate-700 border-slate-700 text-white';
-      default: return 'bg-transparent border-slate-700 text-white';
+      default: return 'bg-transparent border-slate-400 dark:border-slate-700 text-black dark:text-white';
     }
   };
 
@@ -169,8 +169,8 @@ const WordleAI: React.FC = () => {
                   rounded flex items-center justify-center font-bold transition-all active:scale-90
                   ${usedLetters[key] === 'correct' ? 'bg-emerald-500 text-white' : 
                     usedLetters[key] === 'present' ? 'bg-amber-500 text-white' :
-                    usedLetters[key] === 'absent' ? 'bg-slate-800 text-slate-500' : 
-                    'bg-slate-700 text-white'}
+                    usedLetters[key] === 'absent' ? 'bg-slate-300 dark:bg-slate-800 text-slate-400 dark:text-slate-500' : 
+                    'bg-slate-200 dark:bg-slate-700 text-black dark:text-white'}
                 `}
               >
                 {key === 'BACKSPACE' ? '⌫' : key}
