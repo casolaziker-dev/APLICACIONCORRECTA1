@@ -271,6 +271,7 @@ const AirHockey: React.FC = () => {
           </div>
         )}
 
+        {/* Pantalla de juego en espera */}
         {gameState === 'waiting' && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <p className="text-white font-black text-xs uppercase tracking-[0.5em] animate-pulse bg-black/40 px-4 py-2 rounded-full">Toca para Sacar</p>
@@ -288,7 +289,7 @@ const AirHockey: React.FC = () => {
                 onClick={resetGame}
                 className="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-xl shadow-[0_0_20px_rgba(79,70,229,0.4)] active:scale-95 transition-all"
              >
-                NUEVO DUELO
+                NUEVO DUEL
              </button>
           </div>
         )}
