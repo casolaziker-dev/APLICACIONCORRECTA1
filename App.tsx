@@ -4,7 +4,6 @@ import { Sector, Game } from './types';
 import Home from './components/Home';
 import GameList from './components/GameList';
 import GameRunner from './components/GameRunner';
-import { audioService } from './services/audioService';
 
 const GAMES: Game[] = [
   { id: 'quiz-ai', title: 'Trivia AI', description: 'Preguntas infinitas de IA.', icon: '🧠', color: 'bg-purple-500', players: 1 },
@@ -40,7 +39,6 @@ const App: React.FC = () => {
   }, []);
 
   const handleBack = () => {
-    audioService.playClick();
     if (activeGame) setActiveGame(null);
     else setSector('HOME');
   };
@@ -48,16 +46,13 @@ const App: React.FC = () => {
   const toggleMute = () => {
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
-    audioService.setMuted(nextMuted).catch(err => console.error("Error al activar audio:", err));
   };
 
   const changeSector = (s: Sector) => {
-    audioService.playClick();
     setSector(s);
   };
 
   const selectGame = (g: Game) => {
-    audioService.playClick();
     setActiveGame(g);
   };
 
