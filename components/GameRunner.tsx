@@ -99,7 +99,7 @@ const GameRunner: React.FC<GameRunnerProps> = ({ game }) => {
             <h2 className="text-3xl font-black text-white italic tracking-tighter uppercase">{game.title}</h2>
             <div className="flex justify-center">
               <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-[10px] font-black text-indigo-400 uppercase tracking-widest">
-                {game.players === 1 ? 'Modo Solitario' : 'Duelo 2 Jugadores'}
+                {game.players === 1 ? 'Modo Solitario' : 'Duel 2 Jugadores'}
               </span>
             </div>
           </div>
