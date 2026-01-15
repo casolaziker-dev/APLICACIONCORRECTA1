@@ -12,7 +12,7 @@ const BombPass: React.FC = () => {
   const startGame = () => {
     setGameState('playing');
     setHolder(Math.random() > 0.5 ? 1 : 2);
-    const duration = 5 + Math.random() * 10; // 5 to 15 seconds
+    const duration = 5 + Math.random() * 10; // 5 a 15 segundos
     setTimeLeft(duration);
     
     if (timerRef.current) clearInterval(timerRef.current);
@@ -31,9 +31,7 @@ const BombPass: React.FC = () => {
 
   const explode = () => {
     setGameState('exploded');
-    // The winner is the one who ISN'T holding the bomb
-    // But since we update holder on click, at the moment of explosion, 
-    // the current holder is the loser.
+    if (navigator.vibrate) navigator.vibrate([100, 50, 500]);
   };
 
   useEffect(() => {
@@ -57,7 +55,35 @@ const BombPass: React.FC = () => {
   const bombColor = timeLeft < 3 ? 'text-red-500' : timeLeft < 6 ? 'text-orange-500' : 'text-yellow-500';
 
   return (
-    <div className="flex flex-col h-full bg-slate-950 overflow-hidden relative">
+    <div className={`flex flex-col h-full bg-slate-950 overflow-hidden relative ${gameState === 'exploded' ? 'animate-shake' : ''}`}>
+      <style>{`
+        @keyframes full-explosion {
+          0% { transform: scale(0); opacity: 0; }
+          10% { opacity: 1; }
+          40% { transform: scale(4); background: white; }
+          100% { transform: scale(6); background: #ef4444; opacity: 0; }
+        }
+        @keyframes shake {
+          0%, 100% { transform: translate(0, 0); }
+          10%, 30%, 50%, 70%, 90% { transform: translate(-8px, 8px); }
+          20%, 40%, 60%, 80% { transform: translate(8px, -8px); }
+        }
+        .animate-explosion {
+          animation: full-explosion 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+        .animate-shake {
+          animation: shake 0.5s ease-in-out;
+        }
+      `}</style>
+
+      {/* Explosión que tapa toda la pantalla */}
+      {gameState === 'exploded' && (
+        <div className="absolute inset-0 z-[200] flex items-center justify-center pointer-events-none overflow-hidden">
+          <div className="w-64 h-64 rounded-full animate-explosion shadow-[0_0_100px_#ef4444]" />
+          <div className="absolute inset-0 bg-white/40 animate-pulse duration-75" />
+        </div>
+      )}
+
       {/* Player 1 Area (Top) */}
       <button 
         onClick={() => passBomb(1)}
@@ -67,8 +93,7 @@ const BombPass: React.FC = () => {
         `}
       >
         <span className="text-xs font-black text-blue-400 mb-4 tracking-widest uppercase">Jugador 1</span>
-        {holder === 1 && gameState === 'playing' && <span className="text-xl font-bold text-white animate-bounce">¡TOCA PARA PASAR!</span>}
-        {gameState === 'exploded' && holder === 1 && <span className="text-3xl font-black text-red-500">💥 ¡BOOM! 💥</span>}
+        {holder === 1 && gameState === 'playing' && <span className="text-xl font-bold text-white animate-bounce">¡PÁSALA!</span>}
       </button>
 
       {/* Bomb Center */}
@@ -85,7 +110,7 @@ const BombPass: React.FC = () => {
             className={`text-8xl transition-all duration-100 ${bombColor} ${gameState === 'playing' ? 'animate-pulse' : ''}`}
             style={{ transform: `scale(${bombScale}) rotate(${gameState === 'playing' ? Math.random() * 5 - 2.5 : 0}deg)` }}
           >
-            {gameState === 'exploded' ? '🔥' : '💣'}
+            {gameState === 'exploded' ? '💥' : '💣'}
           </div>
         )}
       </div>
@@ -99,16 +124,15 @@ const BombPass: React.FC = () => {
         `}
       >
         <span className="text-xs font-black text-red-400 mb-4 tracking-widest uppercase">Jugador 2</span>
-        {holder === 2 && gameState === 'playing' && <span className="text-xl font-bold text-white animate-bounce">¡TOCA PARA PASAR!</span>}
-        {gameState === 'exploded' && holder === 2 && <span className="text-3xl font-black text-red-500">💥 ¡BOOM! 💥</span>}
+        {holder === 2 && gameState === 'playing' && <span className="text-xl font-bold text-white animate-bounce">¡PÁSALA!</span>}
       </button>
 
       {gameState === 'exploded' && (
-        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
-           <div className="bg-slate-800 p-8 rounded-3xl border border-slate-700 text-center shadow-2xl animate-in zoom-in duration-300">
-             <h2 className="text-4xl font-black text-white mb-2">¡PARTIDA!</h2>
-             <p className="text-indigo-400 text-xl font-bold mb-6 uppercase">Ganador: P{winner}</p>
-             <button onClick={() => setGameState('idle')} className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-lg">OTRA VEZ</button>
+        <div className="absolute inset-0 z-[250] flex flex-col items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-1000 delay-500">
+           <div className="bg-slate-800 p-8 rounded-3xl border border-slate-700 text-center shadow-2xl">
+             <h2 className="text-4xl font-black text-white mb-2">¡BOOM!</h2>
+             <p className="text-indigo-400 text-xl font-bold mb-6 uppercase">GANADOR: P{winner}</p>
+             <button onClick={() => setGameState('idle')} className="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-all">OTRA VEZ</button>
            </div>
         </div>
       )}
