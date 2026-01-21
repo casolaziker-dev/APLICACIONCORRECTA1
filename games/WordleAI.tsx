@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getWordleWord } from '../services/geminiService';
 import { record1PScore } from '../services/scoreService';
-import { audioService } from '../services/audioService';
+;
 
 type Status = 'correct' | 'present' | 'absent' | 'empty';
 
