@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { getWordleWord } from '../services/geminiService';
 import { record1PScore } from '../services/scoreService';
-import { audioService } from '../services/audioService';
 
 type Status = 'correct' | 'present' | 'absent' | 'empty';
 
@@ -35,15 +33,12 @@ const WordleAI: React.FC = () => {
     if (key === 'ENTER') {
       if (currentLetter === 5) {
         submitGuess();
-      } else {
-        audioService.playError();
       }
       return;
     }
 
     if (key === 'BACKSPACE') {
       if (currentLetter > 0) {
-        audioService.playClick();
         const newGuesses = [...guesses];
         const row = newGuesses[currentGuessIndex];
         newGuesses[currentGuessIndex] = row.substring(0, row.length - 1);
@@ -53,25 +48,25 @@ const WordleAI: React.FC = () => {
       return;
     }
 
-    if (currentLetter < 5 && key.length === 1 && key.match(/[A-Z]/)) {
-      audioService.playClick();
+    if (currentLetter < 5 && key.length === 1 && key.match(/[A-ZÑ]/i)) {
       const newGuesses = [...guesses];
-      newGuesses[currentGuessIndex] += key;
+      newGuesses[currentGuessIndex] += key.toUpperCase();
       setGuesses(newGuesses);
       setCurrentLetter(currentLetter + 1);
     }
   };
 
   const submitGuess = () => {
-    const guess = guesses[currentGuessIndex];
+    const guess = guesses[currentGuessIndex].toUpperCase();
+    const target = targetWord.toUpperCase();
     const newUsedLetters = { ...usedLetters };
 
     for (let i = 0; i < 5; i++) {
       const char = guess[i];
       let status: Status = 'absent';
-      if (targetWord[i] === char) {
+      if (target[i] === char) {
         status = 'correct';
-      } else if (targetWord.includes(char)) {
+      } else if (target.includes(char)) {
         status = 'present';
       }
 
@@ -82,15 +77,12 @@ const WordleAI: React.FC = () => {
 
     setUsedLetters(newUsedLetters);
 
-    if (guess === targetWord) {
-      audioService.playSuccess();
+    if (guess === target) {
       setGameState('won');
       record1PScore('wordle-ai', 6 - currentGuessIndex, 'high');
     } else if (currentGuessIndex === 5) {
-      audioService.playError();
       setGameState('lost');
     } else {
-      audioService.playClick();
       setCurrentGuessIndex(currentGuessIndex + 1);
       setCurrentLetter(0);
     }
@@ -99,9 +91,11 @@ const WordleAI: React.FC = () => {
   const getLetterStatus = (rowIdx: number, colIdx: number): Status => {
     if (rowIdx >= currentGuessIndex) return 'empty';
     
-    const char = guesses[rowIdx][colIdx];
-    if (targetWord[colIdx] === char) return 'correct';
-    if (targetWord.includes(char)) return 'present';
+    const char = guesses[rowIdx][colIdx]?.toUpperCase();
+    const target = targetWord.toUpperCase();
+    
+    if (target[colIdx] === char) return 'correct';
+    if (target.includes(char)) return 'present';
     return 'absent';
   };
 
@@ -133,7 +127,6 @@ const WordleAI: React.FC = () => {
         .letter-glow { text-shadow: 0 0 10px rgba(255,255,255,0.3); }
       `}</style>
       
-      {/* Grid */}
       <div className="grid grid-rows-6 gap-2.5">
         {guesses.map((row, r) => (
           <div key={r} className="grid grid-cols-5 gap-2.5">
@@ -167,44 +160,5 @@ const WordleAI: React.FC = () => {
           </h2>
           <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-4">La respuesta era: <span className="text-white font-black">{targetWord}</span></p>
           <button 
-            onClick={() => { audioService.playClick(); initGame(); }}
-            className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black text-xs tracking-[0.2em] active:scale-95 transition-all shadow-xl"
-          >
-            NUEVA PALABRA
-          </button>
-        </div>
-      )}
-
-      {/* Keyboard */}
-      <div className="w-full max-w-[420px] space-y-2 pb-8 mt-auto px-1">
-        {[
-          ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-          ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
-          ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACKSPACE']
-        ].map((row, i) => (
-          <div key={i} className="flex justify-center gap-1">
-            {row.map((key) => (
-              <button
-                key={key}
-                onClick={() => onKeyPress(key)}
-                className={`
-                  ${key.length > 1 ? 'px-3 text-[10px]' : 'w-8 h-12 text-sm'} 
-                  rounded-xl flex items-center justify-center font-black transition-all active:scale-90 border-b-4 uppercase
-                  text-white letter-glow
-                  ${usedLetters[key] === 'correct' ? 'bg-emerald-600 border-emerald-800' : 
-                    usedLetters[key] === 'present' ? 'bg-amber-500 border-amber-700' :
-                    usedLetters[key] === 'absent' ? 'bg-slate-800 border-slate-950' : 
-                    'bg-slate-700 border-slate-800'}
-                `}
-              >
-                {key === 'BACKSPACE' ? '⌫' : key === 'ENTER' ? '✓' : key}
-              </button>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default WordleAI;
+            onClick={() => initGame()}
+            className="w-full bg-indigo-600 text-
